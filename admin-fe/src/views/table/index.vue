@@ -1,41 +1,19 @@
 <template>
   <div class="app-container">
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row>
-      <el-table-column align="center" label="ID" width="95">
+    <el-table v-loading="listLoading" :data="list" element-loading-text="Loading" border fit>
+      <el-table-column label="Images" align="center">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          <img :src="scope.row.images" alt height="60">
         </template>
       </el-table-column>
-      <el-table-column label="Title">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
-        </template>
+      <el-table-column label="Title" align="center">
+        <template slot-scope="scope">{{ scope.row.title }}</template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="Rating" prop="rating" align="center"></el-table-column>
+
+      <el-table-column class-name="status-col" label="Genres" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time"/>
-          <span>{{ scope.row.display_time }}</span>
+          <el-tag type="success" v-for="(item, index) in scope.row.genres" :key="index">{{ item }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -59,7 +37,7 @@ export default {
   data() {
     return {
       list: null,
-      listLoading: true
+      listLoading: false
     }
   },
   created() {
@@ -67,11 +45,14 @@ export default {
   },
   methods: {
     fetchData() {
-      this.listLoading = true
-      getList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
+      getList({ page: 1 })
+        .then(({ data }) => {
+          console.log(data)
+          this.list = data.list_data
+        })
+        .catch(e => {
+          console.log(e)
+        })
     }
   }
 }
