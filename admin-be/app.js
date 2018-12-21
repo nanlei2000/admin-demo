@@ -22,8 +22,10 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(cors())
 app.use(function(req, res, next) {
-  const { url, method } = req
-  console.log(url, method)
+  if (process.env.NODE_ENV == 'development') {
+    const { url, method } = req
+    console.log(url, method)
+  }
   next()
 })
 app.use('/api', apiRouter)

@@ -31,7 +31,7 @@
           name="password"
           auto-complete="on"
           placeholder="password"
-          @keyup.enter.native="handleLogin"
+          @keyup.enter.native="handleSubmit"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye"/>
@@ -42,9 +42,9 @@
           <el-col :span="18">
             <el-button
               :loading="loading"
-              type="primary"
+              :type="btnType"
               style="width:100%;"
-              @click.native.prevent="handleLogin"
+              @click.native.prevent="handleSubmit"
             >{{signText}}</el-button>
           </el-col>
           <el-col :span="6">
@@ -57,17 +57,17 @@
           </el-col>
         </el-row>
       </el-form-item>
-      <div class="tips">
+      <!-- <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span>password: admin</span>
-      </div>
+      </div>-->
     </el-form>
   </div>
 </template>
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
-
+import { signup } from '@/api/login'
 export default {
   name: 'Login',
   data() {
@@ -87,8 +87,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'admin'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -97,7 +97,8 @@ export default {
       loading: false,
       pwdType: 'password',
       redirect: undefined,
-      signText: 'Sign In'
+      signText: '登 录',
+      btnType: 'primary'
     }
   },
   watch: {
@@ -115,6 +116,22 @@ export default {
       } else {
         this.pwdType = 'password'
       }
+    },
+    handleSubmit() {
+      switch (this.signText) {
+        case '登 录':
+          this.handleLogin()
+          break
+        case '注 册':
+          this.handleSignUp()
+          break
+        default:
+          break
+      }
+    },
+    toggleText() {
+      this.signText = this.signText == '登 录' ? '注 册' : '登 录'
+      this.btnType = this.btnType == 'primary' ? 'success' : 'primary'
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -135,9 +152,7 @@ export default {
         }
       })
     },
-    toggleText() {
-      this.signText = this.signText == 'Sign In' ? 'Sign Up' : 'Sign In'
-    }
+    handleSignUp() {}
   }
 }
 </script>

@@ -11,14 +11,14 @@ exports.list = async (req, res) => {
       .sort({
         _id: -1
       })
-    const allResult = await movieModel.countDocuments({})
+    const total_count = await movieModel.countDocuments({})
     res.json({
       code: 200,
       data: {
         list_data: result,
         total_info: {
-          total_count: allResult,
-          total_page: Math.ceil(allResult / pageSize)
+          total_count,
+          total_page: Math.ceil(total_count / pageSize)
         }
       }
     })

@@ -10,6 +10,16 @@ export function login(username, password) {
     }
   })
 }
+export function signup(username, password) {
+  return request({
+    url: '/user/signup',
+    method: 'post',
+    data: {
+      username,
+      password
+    }
+  })
+}
 
 export function getInfo(token) {
   return request({

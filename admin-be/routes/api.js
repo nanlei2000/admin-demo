@@ -4,12 +4,6 @@ const multer = require('multer')
 const path = require('path')
 const dbFunc = require('../model/db.js')
 
-/**
- * post 请求用于 热门演出添加
- * 两个中间件
- * 1.拦截form表单中的二进制流数据 存入 public/uploads 并将图片文件名绑定到res对象的自定义属性上
- * 2.将图片文件名和其他的表单数据存入数据库
- */
 const hotShowMidd = {
   fileupload: (req, res, next) => {
     const storage = multer.diskStorage({
@@ -19,11 +13,10 @@ const hotShowMidd = {
       filename: (req, file, cb) => {
         let originName = file.originalname
         let dotInd = originName.lastIndexOf('.')
-        let filename =
-          file.fieldname + '_' + Date.now() + originName.substr(dotInd)
+        let filename = file.fieldname + '_' + Date.now() + originName.substr(dotInd)
         req.filename = filename
         cb(null, filename)
-      },
+      }
     })
     const upload = multer({ storage: storage }).single('pic')
     upload(req, res, err => {
@@ -64,7 +57,7 @@ const hotShowMidd = {
     } else {
       res.render('api', { ret: false, data: JSON.stringify({ msg: 'fail' }) })
     }
-  },
+  }
 }
 
 router.post('/hot_show/add', hotShowMidd.fileupload, hotShowMidd.dbSave)
