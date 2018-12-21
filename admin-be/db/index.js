@@ -1,12 +1,13 @@
 const mongoose = require('mongoose')
+const link = 'mongodb://127.0.0.1:27017/admin-demo'
 mongoose.connect(
-  'mongodb://127.0.0.1:27017/damai',
+  link,
   { useNewUrlParser: true }
 )
 let db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', () => {
-  console.log('数据库连接成功👌')
+  console.log(`connect to ${link}`)
 })
 
 module.exports = mongoose
